@@ -1,0 +1,25 @@
+{
+  "name": "interactive_form",
+  "version": "0.1.0",
+  "description": "My Techdegree project 3 at Treehouse.",
+  "main": "js/script.js",
+  "scripts": {
+    "test": "console.log('Hello, project 3!')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/parphyonov/interactive-form.git"
+  },
+  "keywords": [
+    "interactive",
+    "form",
+    "HTML",
+    "CSS",
+    "JavaScript"
+  ],
+  "author": "Alexei Parphyonov",
+  "license": "MIT",
+  "dependencies": {
+    "normalize.css": "^8.0.0"
+  }
+}
