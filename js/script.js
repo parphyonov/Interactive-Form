@@ -1,1 +1,2 @@
-console.log('Hello, project 3!');
+// Sets focus on the first input element
+$('#name').attr('autofocus', true);
