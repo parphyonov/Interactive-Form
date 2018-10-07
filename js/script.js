@@ -18,8 +18,20 @@ $totalP.bind('DOMSubtreeModified', function() {
 $('#name').attr('autofocus', true);
 
 
+// Targets #other-title
+const $otherTitle = $('#other-title');
 // Hides #other-title from the view, so that it appears only when JS is disabled
-$('#other-title').toggle();
+$otherTitle.toggle();
+// If user selects 'other' option, #other-title appears
+$('#title').on('change', function() {
+  console.log($(this).val());
+  if ($(this).val() === 'other') {
+    $otherTitle.show();
+  // or else gets hidden again
+  } else {
+    $otherTitle.hide();
+  }
+})
 
 
 // Whenever a user picks a different T-Shirt design the following logic will happen
@@ -105,4 +117,31 @@ $checkboxes.on('change', function() {
     $totalP.text(`Total: ${totalCost}`);
   }
   console.log(totalCost);
+});
+
+
+// Targets payment select and corresponging payment sections
+const $paymentMode = $('#payment');
+const $creditCardDiv = $('#credit-card');
+const $paypalDiv = $creditCardDiv.next();
+const $bitcoinDiv = $paypalDiv.next();
+
+$paypalDiv.hide();
+$bitcoinDiv.hide();
+
+$paymentMode.on('change', function() {
+  const value = $(this).val();
+  if (value === 'credit card') {
+    $creditCardDiv.show();
+    $paypalDiv.hide();
+    $bitcoinDiv.hide();
+  } else if (value === 'paypal') {
+    $paypalDiv.show();
+    $creditCardDiv.hide();
+    $bitcoinDiv.hide();
+  } else if (value === 'bitcoin') {
+    $bitcoinDiv.show();
+    $creditCardDiv.hide();
+    $paypalDiv.hide();
+  }
 });
