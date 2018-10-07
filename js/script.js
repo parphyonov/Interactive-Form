@@ -116,7 +116,6 @@ $checkboxes.on('change', function() {
     totalCost -= cost;
     $totalP.text(`Total: ${totalCost}`);
   }
-  console.log(totalCost);
 });
 
 
@@ -143,5 +142,45 @@ $paymentMode.on('change', function() {
     $bitcoinDiv.show();
     $creditCardDiv.hide();
     $paypalDiv.hide();
+  }
+});
+
+
+// Form Validation
+
+// Binds event listener to form on submit
+$('form').on('submit', () => {
+  // email regular expression validator is taken from https://stackoverflow.com/questions/2507030/email-validation-using-jquery
+  const validEmailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  const onlyNumbersRegex = /^[0-9]*$/;
+  const $ccNum = $('#cc-num');
+  const $zip = $('#zip');
+  const $cvv = $('#cvv');
+  // conditions to validate against
+  const nameFieldNotEmpty = $('#name').val() !== '';
+  const emailIsValid = validEmailRegex.test($('#mail').val()) === true;
+  const atLeast1Activity = $('.activities input:checked').length > 0;
+  const creditCardInfoProvided =
+    // 'credit card' payment option is select4ed
+    $paymentMode.val() === 'credit card'
+    // the values of credit card number, zip and cvv codes are provided
+    && $ccNum.val() !== ''
+    && $zip.val() !== ''
+    && $cvv.val() !== '';
+  const ccNum = $ccNum.val();
+  const creditCardProps =
+    // credit card details are not empty
+    creditCardInfoProvided
+    // credit card number contains only numbers AND its length is greater or equal to 13 OR less or equal to 16
+    && (onlyNumbersRegex.test(ccNum) && (ccNum.length >= 13 || ccNum.length <= 16))
+    // zip code contains five characters AND they are numbers only
+    && ($zip.val().length === 5 && onlyNumbersRegex.test($zip.val()))
+    // cvv code contains three characters AND they are numbers only
+    && ($cvv.val().length === 3 && onlyNumbersRegex.test($cvv.val()));
+  // this conditional prevents the form from submission if not all information is provided
+  if (nameFieldNotEmpty && emailIsValid && atLeast1Activity && creditCardProps) {
+    return true;
+  } else {
+    return false;
   }
 });
