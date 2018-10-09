@@ -7,7 +7,7 @@ let totalCost = 0;
 // This one will target a paragraph hardcoded into .activities section to display total cost to the user
 const $totalP = $('.total');
 // This event handler will hide total paragraph in case total is equal to zero, i.e. no activity is checked
-$totalP.bind('DOMSubtreeModified', () => {
+$totalP.bind('DOMSubtreeModified', function() {
   if (totalCost === 0) {
     $(this).hide();
   } else {
@@ -25,8 +25,7 @@ const $otherTitle = $('#other-title');
 // Hides #other-title from the view, so that it appears only when JS is disabled
 $otherTitle.toggle();
 // If user selects 'other' option, #other-title appears
-$('#title').on('change', () => {
-  console.log($(this).val());
+$('#title').on('change', function() {
   if ($(this).val() === 'other') {
     $otherTitle.show();
   // or else gets hidden again
@@ -37,7 +36,7 @@ $('#title').on('change', () => {
 
 
 // Whenever a user picks a different T-Shirt design the following logic will happen
-$('#design').on('change', () => {
+$('#design').on('change', function() {
   // we get id of the selected option : 'js puns' or 'heart js'
   let selectedDesign = $(this).val();
   // we also target each color option available
@@ -59,7 +58,7 @@ $('#design').on('change', () => {
     selectedDesign = 'js shirt';
   }
   // now we iterate over each color option
-  $colors.each(() => {
+  $colors.each(function() {
     // and if its text value includes the name of selected design,
     if ($(this).text().toLowerCase().includes(selectedDesign)) {
       // it remains on display
@@ -86,7 +85,7 @@ const conflicts = {
 // We select all the checkboxes inside .activities
 const $checkboxes = $('.activities input');
 // If change in a checkbox state occurs...
-$checkboxes.on('change', () => {
+$checkboxes.on('change', function() {
   // Getting handle of the name, we will use it in the object later, and for cost calculations as well
   const name = $(this).attr('name');
   // Standard cost
@@ -108,12 +107,14 @@ $checkboxes.on('change', () => {
   if ($(this).is(':checked')) {
     if (abler !== undefined) {
       $checkboxes.eq(abler).attr('disabled', true);
+      $checkboxes.eq(abler).parent().addClass('crossed-out');
     }
     totalCost += cost;
     $totalP.text(`Total: ${totalCost}`);
   } else {
     if (abler !== undefined) {
       $checkboxes.eq(abler).removeAttr('disabled');
+      $checkboxes.eq(abler).parent().removeClass('crossed-out');
     }
     totalCost -= cost;
     $totalP.text(`Total: ${totalCost}`);
@@ -130,7 +131,7 @@ const $bitcoinDiv = $paypalDiv.next();
 $paypalDiv.hide();
 $bitcoinDiv.hide();
 
-$paymentMode.on('change', () => {
+$paymentMode.on('change', function() {
   const value = $(this).val();
   if (value === 'credit card') {
     $creditCardDiv.show();

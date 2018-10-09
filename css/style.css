@@ -160,6 +160,11 @@ button:hover {
   margin-left: -2px;
 }
 
+.crossed-out {
+  color: #6a6767;
+  text-decoration: line-through;
+}
+
 /* =================================
   Helper Classes
 ==================================== */
