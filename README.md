@@ -8,9 +8,9 @@ Browser Testing : laptop
 
 | Firefox Quantum ::: 62.0.2 (64-bit)               ::: ✅ |
 
-|          Safari ::: Version 12.0 (13606.2.11)     ::: ⛔️ |
+|          Safari ::: Version 12.0 (13606.2.11)     ::: ✅ |
 
-|     Tor Browser ::: 8.0 (64-bit)                  ::: ⛔️ |
+|     Tor Browser ::: 8.0 (64-bit)                  ::: ✅ |
 
 
 Browser Testing : mobile
