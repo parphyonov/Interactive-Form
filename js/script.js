@@ -39,11 +39,14 @@ $('#title').on('change', function() {
 })
 
 // hiding color label and select menu
-$('#color').hide().prev().hide()
-;
+$('#color').hide().prev().hide();
+// on click shows
+$('#design').on('click', () => {
+  $('#color').show().prev().show();
+});
+
 // Whenever a user picks a different T-Shirt design the following logic will happen
 $('#design').on('change', function() {
-  $('#color').show().prev().show()
   // we get id of the selected option : 'js puns' or 'heart js'
   let selectedDesign = $(this).val();
   // we also target each color option available
@@ -295,11 +298,20 @@ $('form').on('submit', () => {
 
   // THE MAJOR VALIDATION OF THE FORM ELEMENTS
   // this conditional prevents the form from submission if not all information is provided
-  if (nameFieldNotEmpty && emailIsValid && atLeast1Activity && creditCardProps) {
-    return true;
+  if ($paymentMode.val() === 'credit card') {
+    if (nameFieldNotEmpty && emailIsValid && atLeast1Activity && creditCardProps) {
+      return true;
+    } else {
+      // This return statement stops the form from validation
+      return false;
+    }
   } else {
-    // This return statement stops the form from validation
-    return false;
+    if (nameFieldNotEmpty && emailIsValid && atLeast1Activity) {
+      return true;
+    } else {
+      // This return statement stops the form from validation
+      return false;
+    }
   }
 });
 

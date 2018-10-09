@@ -6,7 +6,7 @@ Browser Testing : laptop
 
 |  Google Chrome ::: Version 69.0.3497.100 (64-bit) ::: ✅ |
 
-| Firefox Quantum ::: 62.0.2 (64-bit)               ::: ⛔️ |
+| Firefox Quantum ::: 62.0.2 (64-bit)               ::: ✅ |
 
 |          Safari ::: Version 12.0 (13606.2.11)     ::: ⛔️ |
 
