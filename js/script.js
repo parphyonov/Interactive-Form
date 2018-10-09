@@ -1,3 +1,5 @@
+// This script does not block form's performance - progressive enhancement is in place
+
 // Global variables
 
 // This variable will store the total cost of the chosen activities
