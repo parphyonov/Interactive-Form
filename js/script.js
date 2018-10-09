@@ -146,6 +146,26 @@ $paymentMode.on('change', function() {
 });
 
 
+// Error messages handler
+const presentError = ($target, option, pos, text) => {
+  if (option === 'inputs') {
+    $target.attr('placeholder', text).addClass('required');
+    if (pos === 'name') {
+      window.scrollTo(0, 0);
+    } else if (pos === 'mail') {
+      window.scrollTo(0, 350);
+    } else if (pos === 'ccNum' || pos === 'zip' || pos === 'cvv') {
+      window.scrollTo(0, 650);
+    }
+  } else if (option === 'activities') {
+    $target.addClass('required');
+    $target.children('legend').eq(0).text('At least one activity needs to be selected!');
+    window.scrollTo(0, 600);
+  } else {
+    console.error('Error message cannot be provided due to misprovided values!');
+  }
+}
+
 // Form Validation
 
 // Binds event listener to form on submit
@@ -158,8 +178,9 @@ $('form').on('submit', () => {
   const $cvv = $('#cvv');
   // conditions to validate against
   const nameFieldNotEmpty = $('#name').val() !== '';
-  const emailIsValid = validEmailRegex.test($('#mail').val()) === true;
-  const atLeast1Activity = $('.activities input:checked').length > 0;
+  const emailIsValid = validEmailRegex.test($('#mail').val());
+  const emailIsEmpty = $('#mail').val() === '';
+  let atLeast1Activity;
   const creditCardInfoProvided =
     // 'credit card' payment option is select4ed
     $paymentMode.val() === 'credit card'
@@ -177,10 +198,76 @@ $('form').on('submit', () => {
     && ($zip.val().length === 5 && onlyNumbersRegex.test($zip.val()))
     // cvv code contains three characters AND they are numbers only
     && ($cvv.val().length === 3 && onlyNumbersRegex.test($cvv.val()));
+
+    const errorEmptyField = 'This field is required!';
+    const errorInvalidCCNum = 'Wrong number of digits!';
+    const errorInvalidCCSymbols = 'Invalid card number!';
+    const errorInvalidZip = 'Invalid zip code!';
+    const errorInvalidZipLength = 'Zips are 5 digits long!'
+    const errorInvalidCVVLength = 'CVV is 3 digits!';
+    const errorInvalidCVV = 'Invalid CVV!';
+
+    // CCV errors-check on
+    // no value provided
+    if ($cvv.val() === '') {
+      presentError($cvv, 'inputs', 'cvv', errorEmptyField);
+    // non-digits provided
+    } else if (!onlyNumbersRegex.test($cvv.val())) {
+      presentError($cvv, 'inputs', 'cvv', errorInvalidCVV);
+      $cvv.val('');
+    // wrong length of CVV
+    } else if ($cvv.val().length !== 3) {
+      presentError($cvv, 'inputs', 'cvv', errorInvalidCVVLength);
+      $cvv.val('');
+    }
+
+    // ZIP errors-check on
+    // no value provided
+    if ($zip.val() === '') {
+      presentError($zip, 'inputs', 'zip', errorEmptyField);
+    // non-digits provided
+    } else if (!onlyNumbersRegex.test($zip.val())) {
+      presentError($zip, 'inputs', 'zip', errorInvalidZip);
+      $zip.val('');
+    // wrong length of ZIP
+    } else if ($zip.val().length !== 5) {
+      presentError($zip, 'inputs', 'zip', errorInvalidZipLength);
+      $zip.val('');
+    }
+
+    // Credit card number errors-check on
+    // no value provided
+    if (ccNum === '') {
+      presentError($ccNum, 'inputs', 'ccNum', errorEmptyField);
+    // non-digits provided
+    } else if (!onlyNumbersRegex.test(ccNum)) {
+      presentError($ccNum, 'inputs', 'ccNum', errorInvalidCCSymbols);
+      $ccNum.val('');
+    // wrong length of credit card number
+    } else if (ccNum.length <= 13 || ccNum.length >= 16) {
+      presentError($ccNum, 'inputs', 'ccNum', errorInvalidCCNum);
+      $ccNum.val('');
+    }
+
+    if ($('.activities input:checked').length > 0) {
+      atLeast1Activity = true;
+    } else {
+      presentError($('.activities'), 'activities')
+    };
+    if (emailIsEmpty) {
+      presentError($('#mail'), 'inputs', 'mail', errorEmptyField);
+    }
+    if (!nameFieldNotEmpty) {
+      presentError($('#name'), 'inputs', 'name', errorEmptyField);
+    }
+
+
+
   // this conditional prevents the form from submission if not all information is provided
   if (nameFieldNotEmpty && emailIsValid && atLeast1Activity && creditCardProps) {
     return true;
   } else {
+    // window.scrollTo(0, 0);
     return false;
   }
 });
