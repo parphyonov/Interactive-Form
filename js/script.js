@@ -40,13 +40,10 @@ $('#title').on('change', function() {
 
 // hiding color label and select menu
 $('#color').hide().prev().hide();
-// on click shows
-$('#design').on('click', () => {
-  $('#color').show().prev().show();
-});
 
 // Whenever a user picks a different T-Shirt design the following logic will happen
 $('#design').on('change', function() {
+  $('#color').show().prev().show();
   // we get id of the selected option : 'js puns' or 'heart js'
   let selectedDesign = $(this).val();
   // we also target each color option available
@@ -66,6 +63,9 @@ $('#design').on('change', function() {
     // into a part of the common hearts options text
     // I liked the algorithm below and it was the only way to keep it this consice, and working:)
     selectedDesign = 'js shirt';
+  // When 'select theme' option is chosen
+  } else {
+    $('#color').hide().prev().hide();
   }
   // now we iterate over each color option
   $colors.each(function() {
