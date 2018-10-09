@@ -5,7 +5,7 @@ let totalCost = 0;
 // This one will target a paragraph hardcoded into .activities section to display total cost to the user
 const $totalP = $('.total');
 // This event handler will hide total paragraph in case total is equal to zero, i.e. no activity is checked
-$totalP.bind('DOMSubtreeModified', function() {
+$totalP.bind('DOMSubtreeModified', () => {
   if (totalCost === 0) {
     $(this).hide();
   } else {
@@ -23,7 +23,7 @@ const $otherTitle = $('#other-title');
 // Hides #other-title from the view, so that it appears only when JS is disabled
 $otherTitle.toggle();
 // If user selects 'other' option, #other-title appears
-$('#title').on('change', function() {
+$('#title').on('change', () => {
   console.log($(this).val());
   if ($(this).val() === 'other') {
     $otherTitle.show();
@@ -35,7 +35,7 @@ $('#title').on('change', function() {
 
 
 // Whenever a user picks a different T-Shirt design the following logic will happen
-$('#design').on('change', function() {
+$('#design').on('change', () => {
   // we get id of the selected option : 'js puns' or 'heart js'
   let selectedDesign = $(this).val();
   // we also target each color option available
@@ -57,7 +57,7 @@ $('#design').on('change', function() {
     selectedDesign = 'js shirt';
   }
   // now we iterate over each color option
-  $colors.each(function() {
+  $colors.each(() => {
     // and if its text value includes the name of selected design,
     if ($(this).text().toLowerCase().includes(selectedDesign)) {
       // it remains on display
@@ -84,7 +84,7 @@ const conflicts = {
 // We select all the checkboxes inside .activities
 const $checkboxes = $('.activities input');
 // If change in a checkbox state occurs...
-$checkboxes.on('change', function() {
+$checkboxes.on('change', () => {
   // Getting handle of the name, we will use it in the object later, and for cost calculations as well
   const name = $(this).attr('name');
   // Standard cost
@@ -128,7 +128,7 @@ const $bitcoinDiv = $paypalDiv.next();
 $paypalDiv.hide();
 $bitcoinDiv.hide();
 
-$paymentMode.on('change', function() {
+$paymentMode.on('change', () => {
   const value = $(this).val();
   if (value === 'credit card') {
     $creditCardDiv.show();
@@ -148,8 +148,15 @@ $paymentMode.on('change', function() {
 
 // Error messages handler
 const presentError = ($target, option, pos, text) => {
+  // Most validation error sources are inputs and they have different properties
+  // to apply in contrast to .acrtivites section which is another branch
+  // in this conditional block
   if (option === 'inputs') {
+    // we add .required to $target that applies certain styles I wrote to make it look like a standard error
     $target.attr('placeholder', text).addClass('required');
+    // Validation in the submit event listener below starts from the bottom of the page
+    // This way if no validation errors are present at the top, the page will automatically scroll to the area where validation error occurs
+    // But if there are validation errors at the top, the sequence will scroll the page to the top naturally
     if (pos === 'name') {
       window.scrollTo(0, 0);
     } else if (pos === 'mail') {
@@ -158,10 +165,13 @@ const presentError = ($target, option, pos, text) => {
       window.scrollTo(0, 650);
     }
   } else if (option === 'activities') {
+    // Here we also add .required (that mostly affects the color of the text)
     $target.addClass('required');
+    // And apply some styles to legend as well
     $target.children('legend').eq(0).text('At least one activity needs to be selected!');
     window.scrollTo(0, 600);
   } else {
+    // If function is used in the wrong way, the console will print the error making it easy to locate it
     console.error('Error message cannot be provided due to misprovided values!');
   }
 }
@@ -172,7 +182,9 @@ const presentError = ($target, option, pos, text) => {
 $('form').on('submit', () => {
   // email regular expression validator is taken from https://stackoverflow.com/questions/2507030/email-validation-using-jquery
   const validEmailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  // regular expression validator containing only numbers
   const onlyNumbersRegex = /^[0-9]*$/;
+  // Targeting credit card section inputs
   const $ccNum = $('#cc-num');
   const $zip = $('#zip');
   const $cvv = $('#cvv');
@@ -180,6 +192,7 @@ $('form').on('submit', () => {
   const nameFieldNotEmpty = $('#name').val() !== '';
   const emailIsValid = validEmailRegex.test($('#mail').val());
   const emailIsEmpty = $('#mail').val() === '';
+  // We will assign a value for it later, when identifying validation errors
   let atLeast1Activity;
   const creditCardInfoProvided =
     // 'credit card' payment option is select4ed
@@ -188,7 +201,9 @@ $('form').on('submit', () => {
     && $ccNum.val() !== ''
     && $zip.val() !== ''
     && $cvv.val() !== '';
+  // Value of #cc-num
   const ccNum = $ccNum.val();
+  // Validation of all credit card details at once
   const creditCardProps =
     // credit card details are not empty
     creditCardInfoProvided
@@ -199,75 +214,85 @@ $('form').on('submit', () => {
     // cvv code contains three characters AND they are numbers only
     && ($cvv.val().length === 3 && onlyNumbersRegex.test($cvv.val()));
 
-    const errorEmptyField = 'This field is required!';
-    const errorInvalidCCNum = 'Wrong number of digits!';
-    const errorInvalidCCSymbols = 'Invalid card number!';
-    const errorInvalidZip = 'Invalid zip code!';
-    const errorInvalidZipLength = 'Zips are 5 digits long!'
-    const errorInvalidCVVLength = 'CVV is 3 digits!';
-    const errorInvalidCVV = 'Invalid CVV!';
+    // Errors object with text messages for errors
+    const errors = {
+      errorEmptyField: 'This field is required!',
+      errorInvalidCCNum: 'Wrong number of digits!',
+      errorInvalidCCSymbols: 'Invalid card number!',
+      errorInvalidZip: 'Invalid zip code!',
+      errorInvalidZipLength: 'Zips are 5 digits long!',
+      errorInvalidCVVLength: 'CVV is 3 digits!',
+      errorInvalidCVV: 'Invalid CVV!'
+    }
 
     // CCV errors-check on
     // no value provided
     if ($cvv.val() === '') {
-      presentError($cvv, 'inputs', 'cvv', errorEmptyField);
+      presentError($cvv, 'inputs', 'cvv', errors['errorEmptyField']);
     // non-digits provided
     } else if (!onlyNumbersRegex.test($cvv.val())) {
-      presentError($cvv, 'inputs', 'cvv', errorInvalidCVV);
+      presentError($cvv, 'inputs', 'cvv', errors['errorInvalidCVV']);
       $cvv.val('');
     // wrong length of CVV
     } else if ($cvv.val().length !== 3) {
-      presentError($cvv, 'inputs', 'cvv', errorInvalidCVVLength);
+      presentError($cvv, 'inputs', 'cvv', errors['errorInvalidCVVLength']);
       $cvv.val('');
     }
 
     // ZIP errors-check on
     // no value provided
     if ($zip.val() === '') {
-      presentError($zip, 'inputs', 'zip', errorEmptyField);
+      presentError($zip, 'inputs', 'zip', errors['errorEmptyField']);
     // non-digits provided
     } else if (!onlyNumbersRegex.test($zip.val())) {
-      presentError($zip, 'inputs', 'zip', errorInvalidZip);
+      presentError($zip, 'inputs', 'zip', errors['errorInvalidZip']);
       $zip.val('');
     // wrong length of ZIP
     } else if ($zip.val().length !== 5) {
-      presentError($zip, 'inputs', 'zip', errorInvalidZipLength);
+      presentError($zip, 'inputs', 'zip', errors['errorInvalidZipLength']);
       $zip.val('');
     }
 
     // Credit card number errors-check on
     // no value provided
     if (ccNum === '') {
-      presentError($ccNum, 'inputs', 'ccNum', errorEmptyField);
+      presentError($ccNum, 'inputs', 'ccNum', errors['errorEmptyField']);
     // non-digits provided
     } else if (!onlyNumbersRegex.test(ccNum)) {
-      presentError($ccNum, 'inputs', 'ccNum', errorInvalidCCSymbols);
+      presentError($ccNum, 'inputs', 'ccNum', errors['errorInvalidCCSymbols']);
       $ccNum.val('');
     // wrong length of credit card number
     } else if (ccNum.length <= 13 || ccNum.length >= 16) {
-      presentError($ccNum, 'inputs', 'ccNum', errorInvalidCCNum);
+      presentError($ccNum, 'inputs', 'ccNum', errors['errorInvalidCCNum']);
       $ccNum.val('');
     }
 
+    // And this is assigning a value of atLeast1Activity variable
+    // If at least one activity checked
     if ($('.activities input:checked').length > 0) {
+      // it gets true
       atLeast1Activity = true;
+    // else it gets false and error is displayed
     } else {
-      presentError($('.activities'), 'activities')
+      presentError($('.activities'), 'activities');
+      atLeast1Activity = false
     };
+
+    //
     if (emailIsEmpty) {
-      presentError($('#mail'), 'inputs', 'mail', errorEmptyField);
+      presentError($('#mail'), 'inputs', 'mail', errors['errorEmptyField']);
     }
     if (!nameFieldNotEmpty) {
-      presentError($('#name'), 'inputs', 'name', errorEmptyField);
+      presentError($('#name'), 'inputs', 'name', errors['errorEmptyField']);
     }
 
 
-
+  // THE MAJOR VALIDATION OF THE FORM ELEMENTS
   // this conditional prevents the form from submission if not all information is provided
   if (nameFieldNotEmpty && emailIsValid && atLeast1Activity && creditCardProps) {
     return true;
   } else {
-    // window.scrollTo(0, 0);
+    // This return statement stops the form from validation
     return false;
   }
 });
