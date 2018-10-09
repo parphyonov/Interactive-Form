@@ -164,6 +164,13 @@ button:hover {
   color: #6a6767;
   text-decoration: line-through;
 }
+#cc-num label {
+  position: relative;
+}
+.validator {
+  color: #ff0f00;
+  font-style: italic;
+}
 
 /* =================================
   Helper Classes

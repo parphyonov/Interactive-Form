@@ -1,6 +1,10 @@
 // This script does not block form's performance - progressive enhancement is in place
 
 // Global variables
+// email regular expression validator is taken from https://stackoverflow.com/questions/2507030/email-validation-using-jquery
+const validEmailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+// regular expression validator containing only numbers
+const onlyNumbersRegex = /^[0-9]*$/;
 
 // This variable will store the total cost of the chosen activities
 let totalCost = 0;
@@ -186,10 +190,6 @@ const presentError = ($target, option, pos, text) => {
 
 // Binds event listener to form on submit
 $('form').on('submit', () => {
-  // email regular expression validator is taken from https://stackoverflow.com/questions/2507030/email-validation-using-jquery
-  const validEmailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-  // regular expression validator containing only numbers
-  const onlyNumbersRegex = /^[0-9]*$/;
   // Targeting credit card section inputs
   const $ccNum = $('#cc-num');
   const $zip = $('#zip');
@@ -302,3 +302,19 @@ $('form').on('submit', () => {
     return false;
   }
 });
+
+
+// Real-time validation for credit card
+$('#cc-num').on('keyup', function() {
+  const $label = $(this).prev();
+  const value = $(this).val();
+  if (!onlyNumbersRegex.test($(this).val())) {
+    $label.html('Card Number: <span class="validator">contains non-digits!</span>');
+  } else if (value.length < 13) {
+    $label.html('Card Number: <span class="validator"> is too small!</span>');
+  } else if (value.length > 16) {
+    $label.html('Card Number: <span class="validator"> is too big!</span>');
+  } else {
+    $label.html('Card Number:');
+  }
+})
