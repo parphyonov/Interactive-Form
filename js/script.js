@@ -17,7 +17,7 @@ $totalP.bind('DOMSubtreeModified', function() {
   } else {
     $(this).show();
   }
-})
+});
 
 
 // Sets focus on the first input element
@@ -36,7 +36,7 @@ $('#title').on('change', function() {
   } else {
     $otherTitle.hide();
   }
-})
+});
 
 // hiding color label and select menu
 $('#color').hide().prev().hide();
@@ -90,7 +90,7 @@ const conflicts = {
   'js-libs': 4,
   'express': 1,
   'node': 2
-}
+};
 
 // We select all the checkboxes inside .activities
 const $checkboxes = $('.activities input');
@@ -187,7 +187,7 @@ const presentError = ($target, option, pos, text) => {
     // If function is used in the wrong way, the console will print the error making it easy to locate it
     console.error('Error message cannot be provided due to misprovided values!');
   }
-}
+};
 
 // Form Validation
 
@@ -232,47 +232,47 @@ $('form').on('submit', () => {
       errorInvalidZipLength: 'Zips are 5 digits long!',
       errorInvalidCVVLength: 'CVV is 3 digits!',
       errorInvalidCVV: 'Invalid CVV!'
-    }
+    };
 
     // CCV errors-check on
     // no value provided
     if ($cvv.val() === '') {
-      presentError($cvv, 'inputs', 'cvv', errors['errorEmptyField']);
+      presentError($cvv, 'inputs', 'cvv', errors.errorEmptyField);
     // non-digits provided
     } else if (!onlyNumbersRegex.test($cvv.val())) {
-      presentError($cvv, 'inputs', 'cvv', errors['errorInvalidCVV']);
+      presentError($cvv, 'inputs', 'cvv', errors.errorInvalidCVV);
       $cvv.val('');
     // wrong length of CVV
     } else if ($cvv.val().length !== 3) {
-      presentError($cvv, 'inputs', 'cvv', errors['errorInvalidCVVLength']);
+      presentError($cvv, 'inputs', 'cvv', errors.errorInvalidCVVLength);
       $cvv.val('');
     }
 
     // ZIP errors-check on
     // no value provided
     if ($zip.val() === '') {
-      presentError($zip, 'inputs', 'zip', errors['errorEmptyField']);
+      presentError($zip, 'inputs', 'zip', errors.errorEmptyField);
     // non-digits provided
     } else if (!onlyNumbersRegex.test($zip.val())) {
-      presentError($zip, 'inputs', 'zip', errors['errorInvalidZip']);
+      presentError($zip, 'inputs', 'zip', errors.errorInvalidZip);
       $zip.val('');
     // wrong length of ZIP
     } else if ($zip.val().length !== 5) {
-      presentError($zip, 'inputs', 'zip', errors['errorInvalidZipLength']);
+      presentError($zip, 'inputs', 'zip', errors.errorInvalidZipLength);
       $zip.val('');
     }
 
     // Credit card number errors-check on
     // no value provided
     if (ccNum === '') {
-      presentError($ccNum, 'inputs', 'ccNum', errors['errorEmptyField']);
+      presentError($ccNum, 'inputs', 'ccNum', errors.errorEmptyField);
     // non-digits provided
     } else if (!onlyNumbersRegex.test(ccNum)) {
-      presentError($ccNum, 'inputs', 'ccNum', errors['errorInvalidCCSymbols']);
+      presentError($ccNum, 'inputs', 'ccNum', errors.errorInvalidCCSymbols);
       $ccNum.val('');
     // wrong length of credit card number
     } else if (ccNum.length <= 13 || ccNum.length >= 16) {
-      presentError($ccNum, 'inputs', 'ccNum', errors['errorInvalidCCNum']);
+      presentError($ccNum, 'inputs', 'ccNum', errors.errorInvalidCCNum);
       $ccNum.val('');
     }
 
@@ -289,10 +289,10 @@ $('form').on('submit', () => {
 
     //
     if (emailIsEmpty) {
-      presentError($('#mail'), 'inputs', 'mail', errors['errorEmptyField']);
+      presentError($('#mail'), 'inputs', 'mail', errors.errorEmptyField);
     }
     if (!nameFieldNotEmpty) {
-      presentError($('#name'), 'inputs', 'name', errors['errorEmptyField']);
+      presentError($('#name'), 'inputs', 'name', errors.errorEmptyField);
     }
 
 
