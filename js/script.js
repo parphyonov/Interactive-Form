@@ -34,9 +34,12 @@ $('#title').on('change', function() {
   }
 })
 
-
+// hiding color label and select menu
+$('#color').hide().prev().hide()
+;
 // Whenever a user picks a different T-Shirt design the following logic will happen
 $('#design').on('change', function() {
+  $('#color').show().prev().show()
   // we get id of the selected option : 'js puns' or 'heart js'
   let selectedDesign = $(this).val();
   // we also target each color option available
